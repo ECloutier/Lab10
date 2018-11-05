@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:behaviors="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:converters="clr-namespace:lab8.Converters;assembly=lab8"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="lab8.Views.RegisterPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:FirstValidationErrorToTextConverter x:Key="ErrorToTextConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout>
+
+                <StackLayout Padding="20"
+                     HorizontalOptions="CenterAndExpand"
+                     VerticalOptions="CenterAndExpand">
+                    <Label Text="Already a member ?"></Label>
+                    <Button Text="Login"
+                            Command="{Binding NavigateToLoginCommand}">
+                    </Button>
+                    <Label Text="Your Username."></Label>
+                    <Entry Placeholder="Type your username here"
+                           Text="{Binding User.Value, Mode=TwoWay}">
+                        <Entry.Behaviors>
+                            <behaviors:EventToCommandBehavior
+                                EventName="Unfocused"
+                                Command="{Binding ValidateUserCommand}" />
+                        </Entry.Behaviors>
+
+                        <Entry.Triggers>
+                            <DataTrigger TargetType="Entry"
+                                         Binding ="{Binding User.IsValid}"
+                                         Value="False">
+                                <Setter Property="BackgroundColor" Value="Red"/>
+                            </DataTrigger>
+                        </Entry.Triggers>
+
+                    </Entry>
+                    <Label Text="{Binding User.Errors,
+                              Converter={StaticResource ErrorToTextConverter}}" />
+
+                    <Label Text="Your Password.">
+
+                    </Label>
+                    <Entry Placeholder="Type your password here"
+                           Text="{Binding Password.Value}">
+                        <Entry.Behaviors>
+                            <behaviors:EventToCommandBehavior
+                            EventName="Unfocused"
+                            Command="{Binding ValidatePasswordCommand}" />
+                        </Entry.Behaviors>
+
+                        <Entry.Triggers>
+                            <DataTrigger TargetType="Entry"
+                                         Binding ="{Binding Password.IsValid}"
+                                         Value="False">
+                                <Setter Property="BackgroundColor" Value="Red"/>
+                            </DataTrigger>
+                        </Entry.Triggers>
+                    </Entry>
+
+
+                    <Label Text="{Binding Password.Errors,
+                              Converter={StaticResource ErrorToTextConverter}}" />
+                    <Button Padding="20"
+                    Text="Register"
+                    IsEnabled="{Binding IsValidated}"
+                    Command="{Binding RegisterCommand}">
+                    </Button>
+                </StackLayout>
+
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

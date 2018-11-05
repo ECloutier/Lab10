@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="lab8.Views.LoginPage">
+
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout>
+
+                <StackLayout Padding="20"
+                     HorizontalOptions="CenterAndExpand"
+                     VerticalOptions="CenterAndExpand">
+
+                    <Label Text="Your Username."></Label>
+                    <Entry Placeholder="Type your username here"
+                           Text="{Binding User.Value, Mode=TwoWay}">
+                    </Entry>
+
+                    <Label Text="Your Password.">
+
+                    </Label>
+                    <Entry Placeholder="Type your password here"
+                           IsPassword="true"
+                           Text="{Binding Password.Value, Mode=TwoWay}">
+                    </Entry>
+
+                    <Button Padding="20"
+                        Text="Register"
+                        Command="{Binding AuthenticateCommand}">
+                    </Button>
+                </StackLayout>
+
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
