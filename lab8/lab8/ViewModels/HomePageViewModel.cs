@@ -15,7 +15,7 @@ using lab8.Services;
 
 namespace lab8.ViewModels
 {
-	public class LoginPageViewModel : ViewModelBase
+	public class HomePageViewModel : ViewModelBase
     {
         private ValidatableObject<string> _user;
         private ValidatableObject<string> _password;
@@ -33,7 +33,7 @@ namespace lab8.ViewModels
             get => _password;
         }
 
-        public LoginPageViewModel(IAuthenticationService authenticationService, INavigationService navigationService, IPageDialogService pageDialogService)
+        public HomePageViewModel(IAuthenticationService authenticationService, INavigationService navigationService, IPageDialogService pageDialogService)
         : base(navigationService)
         {
             _user = new ValidatableObject<string>();

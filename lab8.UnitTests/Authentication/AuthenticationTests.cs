@@ -68,32 +68,36 @@ namespace lab8.UnitTests.Authentication
         [Fact]
         public void UserNameNotInDatabse_WhenAuthenticateUser_returnIsNotAuthenticated()
         {
-            bool isAuth = authenticationService.AuthenticateUser(NOT_AUTHENTICATED_USERNAME, AUTHENTICATED_PASSWORD);
+            authenticationService.LogIn(NOT_AUTHENTICATED_USERNAME, AUTHENTICATED_PASSWORD);
 
+            bool isAuth = authenticationService.IsUserAuthenticated;
             Assert.False(isAuth);
         }
 
         [Fact]
         public void UserNameInDatabassePasswordIsNot_WhenAuthenticateUser_returnIsNotAuthenticated()
         {
-            bool isAuth = authenticationService.AuthenticateUser(AUTHENTICATED_USERNAME, NOT_AUTHENTICATED_PASSWORD);
+            authenticationService.LogIn(AUTHENTICATED_USERNAME, NOT_AUTHENTICATED_PASSWORD);
 
+            bool isAuth = authenticationService.IsUserAuthenticated;
             Assert.False(isAuth);
         }
 
         [Fact]
         public void UserNameAndPasswordAreNotInDatabase_WhenAuthenticateUser_returnIsNotAuthenticated()
         {
-            bool isAuth = authenticationService.AuthenticateUser(NOT_AUTHENTICATED_USERNAME, NOT_AUTHENTICATED_PASSWORD);
+            authenticationService.LogIn(NOT_AUTHENTICATED_USERNAME, NOT_AUTHENTICATED_PASSWORD);
 
+            bool isAuth = authenticationService.IsUserAuthenticated;
             Assert.False(isAuth);
         }
 
         [Fact]
         public void UserNameAndPasswordAreInDatabase_WhenAuthenticateUser_returnIsAuthenticated()
         {
-            bool isAuth = authenticationService.AuthenticateUser(AUTHENTICATED_USERNAME, AUTHENTICATED_PASSWORD);
+            authenticationService.LogIn(AUTHENTICATED_USERNAME, AUTHENTICATED_PASSWORD);
 
+            bool isAuth = authenticationService.IsUserAuthenticated;
             Assert.True(isAuth);
         }
 

@@ -9,12 +9,13 @@ namespace lab8.Services.Authentication
 {
     public interface IAuthenticationService
     {
+        bool IsUserAuthenticated { get; }
+        int AuthenticatedUserId { get;  }
+        void LogIn(string login, string password);
         IEnumerable<User> GetDatabaseToList();
         User GetById(int i);
         void Delete(User u);
         void Add(User u);
         void Update(User u);
-
-        bool AuthenticateUser(string u, string p);
     }
 }

@@ -9,13 +9,16 @@ namespace lab8.Services.Authentication
     {
         private ICryptoService _cryptoService;
         private IRepository<User> _userDb;
+        public bool IsUserAuthenticated { get; set; }
+        public int AuthenticatedUserId { get; set; }
+
         public AuthenticationService(ICryptoService cryptoService, IRepository<User> userDb)
         {
             _cryptoService = cryptoService;
             _userDb = userDb;
         }
 
-        public bool AuthenticateUser(string username, string password)
+        public void LogIn(string username, string password)
         {
             IEnumerable<User> listOfUsers = GetDatabaseToList();
             foreach (User user in listOfUsers)
@@ -25,19 +28,20 @@ namespace lab8.Services.Authentication
                     string salt = user.PasswordSalt;
                     string authHashedPassword = _cryptoService.HashSHA512(password, salt);
 
-                    if (authHashedPassword == user.HashedPassword) { 
-                        return true;
+                    if (authHashedPassword == user.HashedPassword) {
+                        AuthenticateUser(user.Id);
                     }
-                    return false;
                 }
             }
-            return false;
 
         }
 
-        //************************************//
-        //************* REPOSITORY ***********//
-        //************************************//
+        public void AuthenticateUser(int id)
+        {
+            IsUserAuthenticated = true;
+            AuthenticatedUserId = id;
+        }
+
         public IEnumerable<User> GetDatabaseToList()
         {
             return _userDb.GetAll();

@@ -11,12 +11,14 @@ using System.Linq;
 using lab8.Services.Crypto;
 using lab8.Services.Authentication;
 using lab8.Services.Repository;
+using lab8.Services.Storage;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace lab8
 {
     public partial class App
     {
+        public static readonly string KEY_ID = "Cryptohard";
         /* 
          * The Xamarin Forms XAML Previewer in Visual Studio uses System.Activator.CreateInstance.
          * This imposes a limitation in which the App class must have a default constructor. 
@@ -42,6 +44,7 @@ namespace lab8
             containerRegistry.RegisterSingleton<IRepository<User>, SqLiteRepository<User>>();
             containerRegistry.RegisterSingleton<IAuthenticationService, AuthenticationService>();
             containerRegistry.RegisterSingleton<ICryptoService, CryptoService>();
+            containerRegistry.RegisterSingleton<ISecureStorageService, SecureStorageService>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
@@ -53,19 +56,22 @@ namespace lab8
         {
             var userRepository = Container.Resolve<IRepository<User>>();
             var cryptoService = Container.Resolve<ICryptoService>();
+            var secureStorageService = Container.Resolve<ISecureStorageService>();
+
+            secureStorageService.SetEncryptionKeyAsync(KEY_ID, cryptoService.GenerateEncryptionKey());
 
             string userSalt = cryptoService.GenerateSalt();
-            string encrpytionKey = "allo";
+            string encrpytionKey = "cryptoeasy";
 
             if (userRepository.GetAll().Count() != 0)
                 return;
 
             userRepository.Add(new User()
             {
-                Login = "123",
-                HashedPassword = cryptoService.HashSHA512("456", userSalt),
+                Login = "83",
+                HashedPassword = cryptoService.HashSHA512("1420", userSalt),
                 PasswordSalt = userSalt,
-                CreditCard = cryptoService.Encrypt("5162042483342023",encrpytionKey)
+                CreditCard = cryptoService.Encrypt("9192123451513121", encrpytionKey)
             });
         }
 

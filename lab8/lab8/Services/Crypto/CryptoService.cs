@@ -46,6 +46,15 @@ namespace lab8.Services.Crypto
             }
         }
 
+        public string GenerateEncryptionKey()
+        {
+            RNGCryptoServiceProvider cryptoProvider = new RNGCryptoServiceProvider();
+            int fileLength = 8 * 1024;
+            var randomBytes = new byte[fileLength];
+            cryptoProvider.GetBytes(randomBytes);
+            return Convert.ToBase64String(randomBytes);
+        }
+
         private byte[] CreateKey(string password, int keyBytes = 32)
         {
             byte[] salt = new byte[] { 80, 70, 60, 50, 40, 30, 20, 10 };

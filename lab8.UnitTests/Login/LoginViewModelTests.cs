@@ -51,10 +51,10 @@ namespace lab8.UnitTests
             loginPageViewModel.User.Value = AUTHENTICATED_USERNAME;
             loginPageViewModel.Password.Value = NOT_AUTHENTICATED_PASSWORD;
 
-            authenticationServiceMock.Setup(a => a.AuthenticateUser(
+            authenticationServiceMock.Setup(a => a.LogIn(
                                    NOT_AUTHENTICATED_USERNAME,
                                    NOT_AUTHENTICATED_PASSWORD
-                                   )).Returns(false);
+                                   ));
 
             loginPageViewModel.AuthenticateCommand.Execute();
 
@@ -67,10 +67,10 @@ namespace lab8.UnitTests
             loginPageViewModel.User.Value = AUTHENTICATED_USERNAME;
             loginPageViewModel.Password.Value = NOT_AUTHENTICATED_PASSWORD;
 
-            authenticationServiceMock.Setup(a => a.AuthenticateUser(
+            authenticationServiceMock.Setup(a => a.LogIn(
                                    NOT_AUTHENTICATED_USERNAME,
                                    NOT_AUTHENTICATED_PASSWORD
-                                   )).Returns(false);
+                                   ));
 
             loginPageViewModel.AuthenticateCommand.Execute();
 
@@ -83,10 +83,10 @@ namespace lab8.UnitTests
             loginPageViewModel.User.Value = AUTHENTICATED_USERNAME;
             loginPageViewModel.Password.Value = AUTHENTICATED_PASSWORD;
 
-            authenticationServiceMock.Setup(a => a.AuthenticateUser(
+            authenticationServiceMock.Setup(a => a.LogIn(
                                    AUTHENTICATED_USERNAME,
                                    AUTHENTICATED_PASSWORD
-                                   )).Returns(true);
+                                   ));
 
             loginPageViewModel.AuthenticateCommand.Execute();
 
@@ -99,7 +99,7 @@ namespace lab8.UnitTests
             loginPageViewModel.User.Value = NOT_AUTHENTICATED_USERNAME;
             loginPageViewModel.Password.Value = NOT_AUTHENTICATED_PASSWORD;
 
-            authenticationServiceMock.Setup(a => a.AuthenticateUser(
+            authenticationServiceMock.Setup(a => a.LogIn(
                                    NOT_AUTHENTICATED_USERNAME,
                                    NOT_AUTHENTICATED_PASSWORD
                                    )).Throws(new Exception());
