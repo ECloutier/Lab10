@@ -11,19 +11,13 @@ using System.Linq;
 using lab8.Services.Crypto;
 using lab8.Services.Authentication;
 using lab8.Services.Repository;
-using lab8.Services.Storage;
+using lab8.Services.SecureStorageEssentials;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace lab8
 {
     public partial class App
     {
-        public static readonly string KEY_ID = "Cryptohard";
-        /* 
-         * The Xamarin Forms XAML Previewer in Visual Studio uses System.Activator.CreateInstance.
-         * This imposes a limitation in which the App class must have a default constructor. 
-         * App(IPlatformInitializer initializer = null) cannot be handled by the Activator.
-         */
         public App() : this(null) { }
 
         public App(IPlatformInitializer initializer) : base(initializer) { }
@@ -55,25 +49,26 @@ namespace lab8
         private void SeedTestData()
         {
             var userRepository = Container.Resolve<IRepository<User>>();
-            var cryptoService = Container.Resolve<ICryptoService>();
-            var secureStorageService = Container.Resolve<ISecureStorageService>();
-
-            secureStorageService.SetEncryptionKeyAsync(KEY_ID, cryptoService.GenerateEncryptionKey());
-
-            string userSalt = cryptoService.GenerateSalt();
-            string encrpytionKey = "cryptoeasy";
-
             if (userRepository.GetAll().Count() != 0)
                 return;
 
-            userRepository.Add(new User()
-            {
-                Login = "83",
-                HashedPassword = cryptoService.HashSHA512("1420", userSalt),
-                PasswordSalt = userSalt,
-                CreditCard = cryptoService.Encrypt("9192123451513121", encrpytionKey)
-            });
-        }
+            var cryptoService = Container.Resolve<ICryptoService>();
+            var secureStorageService = Container.Resolve<ISecureStorageService>();
+           
+            string userSalt = cryptoService.GenerateSalt();
+            string encryptionKey = cryptoService.GenerateEncryptionKey();
+            string creditcard = "5162042483342023";
 
+            var user = new User()
+            {
+                HashedPassword = cryptoService.HashSHA512("456", userSalt),
+                Login = "123",
+                PasswordSalt = userSalt,
+                CreditCard = cryptoService.Encrypt(creditcard, encryptionKey)
+            };
+
+            userRepository.Add(user);
+            secureStorageService.SetEncryptionKeyAsync(user.Id.ToString(), encryptionKey);
+        }
     }
 }

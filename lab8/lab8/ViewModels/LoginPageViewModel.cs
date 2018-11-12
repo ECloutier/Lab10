@@ -1,18 +1,8 @@
 ﻿using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using lab8.Validations;
-using System.ComponentModel;
-using lab8.Services.Repository;
-using lab8.Models.Entities;
 using Prism.Services;
 using lab8.Services.Authentication;
-using lab8.Services;
-
 namespace lab8.ViewModels
 {
 	public class LoginPageViewModel : ViewModelBase
@@ -24,13 +14,17 @@ namespace lab8.ViewModels
         private IPageDialogService _pageDialogService;
         private INavigationService _navigationService;
 
+        private INavigationParameters userParameters = new NavigationParameters();
+
         public ValidatableObject<string> User
         {
             get => _user;
+            set => _user = value;
         }
         public ValidatableObject<string> Password
         {
             get => _password;
+            set => _password = value;
         }
 
         public LoginPageViewModel(IAuthenticationService authenticationService, INavigationService navigationService, IPageDialogService pageDialogService)
@@ -44,16 +38,19 @@ namespace lab8.ViewModels
             _navigationService = navigationService;
         }
 
+
         public DelegateCommand AuthenticateCommand => new DelegateCommand(Authenticate);
         private async void Authenticate()
         {
             try
             {
-                _authenticationService.LogIn(User.Value, Password.Value);
+                _authenticationService.AuthenticateUser(_user.Value, _password.Value);
 
-                if (_authenticationService.IsUserAuthenticated)
+                if(_authenticationService.IsUserAuthenticated)
                 {
-                    await _navigationService.NavigateAsync(nameof(Views.MainPage));
+                    userParameters.Add("id", _authenticationService.UserID);
+
+                    await _navigationService.NavigateAsync(nameof(Views.MainPage), userParameters);
                 }
                 else
                 {
@@ -63,7 +60,7 @@ namespace lab8.ViewModels
             }
             catch
             {
-                await _pageDialogService.DisplayAlertAsync("The following error as occured :", "", "Ok");
+                await _pageDialogService.DisplayAlertAsync("Error as occured :", "", "Ok");
             }
         }
 

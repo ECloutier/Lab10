@@ -27,7 +27,7 @@
                     </Entry>
 
                     <Button Padding="20"
-                        Text="Register"
+                        Text="Login"
                         Command="{Binding AuthenticateCommand}">
                     </Button>
                 </StackLayout>

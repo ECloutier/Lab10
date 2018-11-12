@@ -2,6 +2,7 @@
 using lab8.Services.Crypto;
 using lab8.Services.Repository;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace lab8.Services.Authentication
 {
@@ -9,8 +10,12 @@ namespace lab8.Services.Authentication
     {
         private ICryptoService _cryptoService;
         private IRepository<User> _userDb;
-        public bool IsUserAuthenticated { get; set; }
-        public int AuthenticatedUserId { get; set; }
+
+        private bool _isUserAuthenticated;
+        private int _userID;
+
+        public bool IsUserAuthenticated { get=>_isUserAuthenticated; set => _isUserAuthenticated = value; }
+        public int UserID { get => _userID; }
 
         public AuthenticationService(ICryptoService cryptoService, IRepository<User> userDb)
         {
@@ -18,53 +23,28 @@ namespace lab8.Services.Authentication
             _userDb = userDb;
         }
 
-        public void LogIn(string username, string password)
+        public void AuthenticateUser(string username, string password)
         {
-            IEnumerable<User> listOfUsers = GetDatabaseToList();
-            foreach (User user in listOfUsers)
-            {
-                if (username == user.Login)
-                {
-                    string salt = user.PasswordSalt;
-                    string authHashedPassword = _cryptoService.HashSHA512(password, salt);
+            User authUser = _userDb.GetAll().Where<User>(user => user.Login == username).FirstOrDefault();
 
-                    if (authHashedPassword == user.HashedPassword) {
-                        AuthenticateUser(user.Id);
-                    }
+            if (authUser != null && username == authUser.Login)
+            {
+                string salt = authUser.PasswordSalt;
+                string authHashedPassword = _cryptoService.HashSHA512(password, salt);
+
+                if (authHashedPassword == authUser.HashedPassword) {
+                    IsUserAuthenticated = true;
+                    _userID = authUser.Id;
+                }
+                else
+                {
+                    IsUserAuthenticated = false;
                 }
             }
-
-        }
-
-        public void AuthenticateUser(int id)
-        {
-            IsUserAuthenticated = true;
-            AuthenticatedUserId = id;
-        }
-
-        public IEnumerable<User> GetDatabaseToList()
-        {
-            return _userDb.GetAll();
-        }
-
-        public User GetById(int userId)
-        {
-            return _userDb.GetById(userId);
-        }
-
-        public void Delete(User user)
-        {
-            _userDb.Delete(user);
-        }
-
-        public void Add(User user)
-        {
-            _userDb.Add(user);
-        }
-
-        public void Update(User user)
-        {
-            _userDb.Update(user);
+            else
+            {
+                IsUserAuthenticated = false;
+            }
         }
     }
 }

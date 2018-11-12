@@ -1,22 +1,17 @@
 ﻿using Xunit;
 using Moq;
 using Prism.Navigation;
-using lab8;
 using lab8.ViewModels;
 using lab8.Services.Authentication;
 using lab8.Models.Entities;
 using Prism.Services;
 using lab8.Services.Crypto;
 using lab8.Services.Repository;
-using System.Threading.Tasks;
-using lab8.Helpers;
-using SQLite;
-using lab8.Services;
 using System;
 
 namespace lab8.UnitTests
 {
-    public class LoginViewModelTests
+    public class LoginPageViewModelTests
     {
         private LoginPageViewModel loginPageViewModel;
 
@@ -32,7 +27,7 @@ namespace lab8.UnitTests
         public const string NOT_AUTHENTICATED_PASSWORD = "notInDb";
         public const string AUTHENTICATED_PASSWORD = "456";
 
-        public LoginViewModelTests()
+        public LoginPageViewModelTests()
         {
             navigationServiceMock = new Mock<INavigationService>();
             pagedialogServiceMock = new Mock<IPageDialogService>();
@@ -51,10 +46,7 @@ namespace lab8.UnitTests
             loginPageViewModel.User.Value = AUTHENTICATED_USERNAME;
             loginPageViewModel.Password.Value = NOT_AUTHENTICATED_PASSWORD;
 
-            authenticationServiceMock.Setup(a => a.LogIn(
-                                   NOT_AUTHENTICATED_USERNAME,
-                                   NOT_AUTHENTICATED_PASSWORD
-                                   ));
+            authenticationServiceMock.Setup(a => a.IsUserAuthenticated).Returns(false);
 
             loginPageViewModel.AuthenticateCommand.Execute();
 
@@ -67,10 +59,7 @@ namespace lab8.UnitTests
             loginPageViewModel.User.Value = AUTHENTICATED_USERNAME;
             loginPageViewModel.Password.Value = NOT_AUTHENTICATED_PASSWORD;
 
-            authenticationServiceMock.Setup(a => a.LogIn(
-                                   NOT_AUTHENTICATED_USERNAME,
-                                   NOT_AUTHENTICATED_PASSWORD
-                                   ));
+            authenticationServiceMock.Setup(a => a.IsUserAuthenticated).Returns(false);
 
             loginPageViewModel.AuthenticateCommand.Execute();
 
@@ -83,14 +72,11 @@ namespace lab8.UnitTests
             loginPageViewModel.User.Value = AUTHENTICATED_USERNAME;
             loginPageViewModel.Password.Value = AUTHENTICATED_PASSWORD;
 
-            authenticationServiceMock.Setup(a => a.LogIn(
-                                   AUTHENTICATED_USERNAME,
-                                   AUTHENTICATED_PASSWORD
-                                   ));
+            authenticationServiceMock.Setup(a => a.IsUserAuthenticated).Returns(true);
 
             loginPageViewModel.AuthenticateCommand.Execute();
 
-            navigationServiceMock.Verify(x => x.NavigateAsync(nameof(Views.MainPage)), Times.Once);
+            navigationServiceMock.Verify(x => x.NavigateAsync(nameof(Views.MainPage),It.IsAny<INavigationParameters>()), Times.Once);
         }
 
         [Fact]
@@ -99,14 +85,14 @@ namespace lab8.UnitTests
             loginPageViewModel.User.Value = NOT_AUTHENTICATED_USERNAME;
             loginPageViewModel.Password.Value = NOT_AUTHENTICATED_PASSWORD;
 
-            authenticationServiceMock.Setup(a => a.LogIn(
+            authenticationServiceMock.Setup(a => a.AuthenticateUser(
                                    NOT_AUTHENTICATED_USERNAME,
                                    NOT_AUTHENTICATED_PASSWORD
                                    )).Throws(new Exception());
 
             loginPageViewModel.AuthenticateCommand.Execute();
 
-            pagedialogServiceMock.Verify(x => x.DisplayAlertAsync("The following error as occured :", "", "Ok"), Times.Once);
+            pagedialogServiceMock.Verify(x => x.DisplayAlertAsync("Error as occured :", "", "Ok"), Times.Once);
         }
     }
 }

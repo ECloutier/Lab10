@@ -5,7 +5,7 @@
              Title="{Binding Title}">
 
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Label Text="Validation Worked !" />
+        <Label Text="{Binding CreditCard}" />
     </StackLayout>
 
 </ContentPage>

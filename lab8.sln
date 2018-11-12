@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lab8", "lab8\lab8\lab8.csproj", "{62502025-A38B-47F6-9734-EC9609E8E39A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab8", "lab8\lab8\lab8.csproj", "{62502025-A38B-47F6-9734-EC9609E8E39A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab8.Android", "lab8\lab8.Android\lab8.Android.csproj", "{755C8994-E9C4-47A5-9555-996243596674}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lab8.UnitTests", "lab8.UnitTests\lab8.UnitTests.csproj", "{3421E2F3-DA30-4EBE-9131-A45A183EFC72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab8.UnitTests", "lab8.UnitTests\lab8.UnitTests.csproj", "{3421E2F3-DA30-4EBE-9131-A45A183EFC72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

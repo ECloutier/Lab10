@@ -1,22 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using Prism.Services;
 
-namespace lab8.Services.Storage
+namespace lab8.Services.SecureStorageEssentials
 {
     public class SecureStorageService : ISecureStorageService
     {
+        IPageDialogService _pageDialogService;
+
+        public SecureStorageService(IPageDialogService pageDialogService)
+        {
+            _pageDialogService = pageDialogService;
+        }
         public async Task<string> GetEncryptionKeyAsync(string keyId)
         {
             try
             {
-                return await SecureStorage.GetAsync(keyId);
+                return await SecureStorage.GetAsync(keyId);    
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return ex.ToString();
             }
         }
 
@@ -26,9 +31,9 @@ namespace lab8.Services.Storage
             {
                 await SecureStorage.SetAsync(keyId, keyValue);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //return ex.Message;
+                await _pageDialogService.DisplayActionSheetAsync("Erreur", "SetEncryptionKeyAsync Exception thrown", "Ok");
             }
         }
     }

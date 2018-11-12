@@ -10,9 +10,6 @@ using System.ComponentModel;
 using lab8.Services.Repository;
 using lab8.Models.Entities;
 using Prism.Services;
-using lab8.Services.Authentication;
-using lab8.Services.Crypto;
-using lab8.Services.Storage;
 
 namespace lab8.ViewModels
 {
@@ -20,12 +17,8 @@ namespace lab8.ViewModels
     {
         private ValidatableObject<string> _user;
         private ValidatableObject<string> _password;
-        private ValidatableObject<string> _creditCard;
         private bool _isValidated;
         private INavigationService _navigationService;
-        private IAuthenticationService _authenticationService;
-        private ICryptoService _cryptoService;
-        private ISecureStorageService _secureStorageService;
 
         public ValidatableObject<string> User
         {
@@ -35,12 +28,6 @@ namespace lab8.ViewModels
         {
             get => _password;
         }
-
-        public ValidatableObject<string> CreditCard
-        {
-            get => _creditCard;
-        }
-
         public bool IsValidated
         {
             get => _isValidated;
@@ -51,16 +38,13 @@ namespace lab8.ViewModels
             }
         }
 
-        public RegisterPageViewModel(INavigationService navigationService/*, IAuthenticationService authenticationService, ICryptoService cryptoService, ISecureStorageService secureStorageService*/)
+        public RegisterPageViewModel(INavigationService navigationService)
         : base(navigationService)
         {
             _user = new ValidatableObject<string>();
             _password = new ValidatableObject<string>();
 
             _navigationService = navigationService;
-            /*_authenticationService = authenticationService;
-            _cryptoService = cryptoService;
-            _secureStorageService = secureStorageService;*/
 
             AddValidations();
         }
@@ -108,24 +92,8 @@ namespace lab8.ViewModels
 
             if (_user.IsValid && _password.IsValid)
             {
-                User user = new User();
-                CreateAndAddUserToDatabase();
                 await _navigationService.NavigateAsync(nameof(Views.MainPage));
             }
-        }
-
-        private void CreateAndAddUserToDatabase()
-        {
-            string userSalt = _cryptoService.GenerateSalt();
-            /*string keyId = ""
-            _secureStorageService.SetEncryptionKeyAsync(KEY_ID, cryptoService.GenerateEncryptionKey());
-
-            _authenticationService.Add(new User()
-            {
-                Login = _user.ToString(),
-                HashedPassword = _cryptoService.HashSHA512(_password.ToString(), userSalt),
-                PasswordSalt = userSalt,
-                CreditCard = _cryptoService.Encrypt(_creditCard.ToString(), encryptionKey)*/
         }
 
         public DelegateCommand NavigateToLoginCommand => new DelegateCommand(NavigateToLogin);

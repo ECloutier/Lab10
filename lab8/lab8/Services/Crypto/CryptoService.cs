@@ -25,6 +25,15 @@ namespace lab8.Services.Crypto
             return Convert.ToBase64String(hashedSaltedValue);
         }
 
+        public string GenerateEncryptionKey()
+        {
+            RNGCryptoServiceProvider cryptoProvider = new RNGCryptoServiceProvider();
+            int fileLength = 8 * 1024;
+            var randomBytes = new byte[fileLength];
+            cryptoProvider.GetBytes(randomBytes);
+            return Convert.ToBase64String(randomBytes);
+        }
+
         public string Decrypt(string encryptedValue, string encryptionKey)
         {
             string iv = encryptedValue.Substring(encryptedValue.IndexOf(';') + 1,
@@ -44,15 +53,6 @@ namespace lab8.Services.Crypto
                 byte[] encrypted = AesEncryptStringToBytes(clearValue, aes.Key, aes.IV);
                 return Convert.ToBase64String(encrypted) + ";" + Convert.ToBase64String(aes.IV);
             }
-        }
-
-        public string GenerateEncryptionKey()
-        {
-            RNGCryptoServiceProvider cryptoProvider = new RNGCryptoServiceProvider();
-            int fileLength = 8 * 1024;
-            var randomBytes = new byte[fileLength];
-            cryptoProvider.GetBytes(randomBytes);
-            return Convert.ToBase64String(randomBytes);
         }
 
         private byte[] CreateKey(string password, int keyBytes = 32)
